@@ -24,7 +24,7 @@ beacon> entra-authcode-flow <clientid> <scope> <browser> [email_hint]
 beacon> entra-authcode-flow 1fec8e78-bce4-4aaf-ab1b-5451cc387264 "openid offline_access https://graph.microsoft.com/.default" 0 bob@example.com
 ```
 
-## References
+## References
 - **[@freefirex](https://x.com/freefirex2)**: [get_azure_token BOF](https://github.com/trustedsec/CS-Remote-OPs-BOF/blob/main/src/Remote/get_azure_token/entry.c) - Original Azure token BOF implementation
 - **[Secureworks](https://www.secureworks.com/)**: [Family of Client IDs Research](https://github.com/secureworks/family-of-client-ids-research) - Client IDs
 - **[@_dirkjan](https://x.com/_dirkjan)**: [ROADtools First-Party Scopes](https://github.com/dirkjanm/ROADtools/blob/master/roadtx/roadtools/roadtx/firstpartyscopes.json) - Microsoft first-party application scopes
