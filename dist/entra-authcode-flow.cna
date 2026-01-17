@@ -46,7 +46,9 @@ Example:
 
     entra-authcode-flow 1fec8e78-bce4-4aaf-ab1b-5451cc387264 \"openid offline_access https://graph.microsoft.com/.default\" 0 bob@example.com
 
-");
+",
+"bof"
+);
 
 alias entra-authcode-flow {
 	local('$barch $handle $data $args $targetUsername $targetIP');
@@ -55,7 +57,7 @@ alias entra-authcode-flow {
 	$barch  = barch($1);
 
 	# read in the right BOF file
-	$handle = openf(script_resource("dist/entra-authcode-flow. $+ $barch $+ .o"));
+	$handle = openf(script_resource("entra-authcode-flow. $+ $barch $+ .o"));
 	$data   = readb($handle, -1);
 	closef($handle);
 
