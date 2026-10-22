@@ -70,8 +70,8 @@ class EntraAuthcodeFlowBOF(BaseBOFTask):
 
         # Encode
         return [
-            (BOFArgumentEncoding.WSTR, parsed.clientid),
-            (BOFArgumentEncoding.WSTR, parsed.scope),
+            (BOFArgumentEncoding.STR, parsed.clientid),
+            (BOFArgumentEncoding.STR, parsed.scope),
             (BOFArgumentEncoding.INT, str(parsed.browser)),
-            (BOFArgumentEncoding.WSTR, parsed.email_hint)
+            (BOFArgumentEncoding.STR, parsed.email_hint)
         ]
